@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "com.teamscale" version "30.0.2"
 }
 
 group 'eu.cqse.tutorials'
@@ -10,6 +11,23 @@ version '1.0-SNAPSHOT'
 // to use. Setting paths to particular JDK installations
 // has shown to be error prone and is not supported by
 // some Gradle plugins well.
+
+teamscale {
+
+    server {
+        url = "http://localhost:8080/"
+        userName = "englandeliza"
+        userAccessToken = "6MeJT187nvemZhMPHRkxfrjveqcQxHeI"
+        project = "tia-junit5"
+    }
+
+    report {
+        testwiseCoverage {
+            partition = "Unit Tests"
+        }
+    }
+}
+
 java {
   toolchain {
     languageVersion.set(JavaLanguageVersion.of(21))
@@ -31,6 +49,13 @@ tasks.withType(Test) {
         exceptionFormat "short"
         showCauses false
         events "failed", "passed"
+    }
+}
+
+tasks.register("tiaTests", com.teamscale.TestImpacted) {
+    useJUnitPlatform()
+    jacoco {
+        includes = ["tia.*"]
     }
 }
 
